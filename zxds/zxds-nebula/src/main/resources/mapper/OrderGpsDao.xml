@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.zxds.nebula.db.dao.OrderGpsDao">
+
+    <insert id="insert" parameterType="com.example.zxds.nebula.db.pojo.OrderGpsEntity">
+        UPSERT INTO zxds.order_gps
+           ("id", "order_id", "driver_id", "customer_id","latitude", "longitude", "speed", "create_time")
+    VALUES
+           (NEXT VALUE FOR zxds.OG_SEQUENCE,#{orderId},#{driverId},#{customerId},'${latitude}','${longitude}','${speed}',NOW())
+    </insert>
+
+    <select id="searchOrderGps" parameterType="long" resultType="HashMap">
+        SELECT "id",
+               "latitude",
+               "longitude",
+               TO_CHAR("create_time",'yyyy-MM-dd HH:mm:ss') AS "createTime"
+        FROM zxds.order_gps
+        WHERE "order_id" = #{orderId}
+    </select>
+    <select id="searchOrderLastGps" parameterType="long" resultType="HashMap">
+        SELECT "id",
+               "latitude",
+               "longitude",
+               TO_CHAR("create_time",'yyyy-MM-dd HH:mm:ss') AS "createTime"
+        FROM zxds.order_gps
+        WHERE "order_id" = #{orderId}
+        ORDER BY "id" DESC
+            LIMIT 1
+    </select>
+
+    <select id="searchOrderAllGps" parameterType="long" resultType="HashMap">
+        SELECT "latitude", "longitude"
+        FROM zxds.order_gps
+        WHERE "order_id" = #{orderId}
+        ORDER BY "id"
+    </select>
+</mapper>

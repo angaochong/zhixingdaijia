@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: zxds-nebula # 每一个需要nacos的微服务项目中都需要
+  cloud:
+    nacos:
+      server-addr: 192.168.91.129:8848 # 这里填写你的VMWare上CentOS的IP地址
+      username: nacos
+      password: nacos
+      discovery:
+        namespace: zxds
+        group: DEFAULT_GROUP
+      config:
+        namespace: zxds
+        file-extension: yaml

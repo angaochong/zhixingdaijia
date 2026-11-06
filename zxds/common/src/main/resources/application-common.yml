@@ -1,0 +1,35 @@
+spring:
+  profiles: common
+
+tencent:
+  cloud:
+    appId: ${TENCENT_CLOUD_APPID}
+    secretId: ${TENCENT_CLOUD_SECRET_ID}
+    secretKey: ${TENCENT_CLOUD_SECRET_KEY}
+    region-public: ap-beijing
+    bucket-public: zxds-public-1465098229
+    region-private: ap-beijing
+    bucket-private: zxds-private-1465098229
+    face:
+      groupName: zxds
+      region: ap-beijing
+  map:
+    key: ${TENCENT_MAP_KEY}
+
+wx:
+  app-id: wx3604d74a8e4bca39
+  app-secret: aa07ff93cb1dea6938806d345f1fd949
+  mch-id: 1234567890
+  key: 11111111111111111111111111111111
+  cert-path: D:\zhixingdaijia\apiclient_cert.p12
+
+minio:
+  endpoint: http://192.168.91.129:9000
+  access-key: root
+  secret-key: abc123456
+
+baidu:
+  cloud:
+    appId: ${BAIDU_CLOUD_APP_ID}
+    appKey: ${BAIDU_CLOUD_APP_KEY}
+    secretKey: ${BAIDU_CLOUD_SECRET_KEY}

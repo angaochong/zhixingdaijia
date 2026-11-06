@@ -1,0 +1,115 @@
+server:
+  jetty:
+    threads:
+      acceptors: 4
+      selectors: 8
+  port: 8102
+  servlet:
+    context-path: /
+
+spring:
+  profiles:
+    #引用application-common.yml文件
+    include: common
+#  application:
+#    name: bff-customer
+  # ============== BFF作为Seata TM必须有的数据源配置 ==============
+  datasource:
+    # BFF作为事务管理器需要独立的数据库来记录全局事务状态
+    url: jdbc:mysql://192.168.91.129:12001/seata_bff_customer?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&nullCatalogMeansCurrent=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: abc123456
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      initial-size: 5
+      min-idle: 5
+      max-active: 10
+      max-wait: 30000
+      validation-query: SELECT 1
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+  redis:
+    database: 4
+    host: 192.168.91.129
+    port: 6379
+    password: abc123456
+    jedis:
+      pool:
+        max-active: 1000
+        max-wait: -1ms
+        max-idle: 16
+        min-idle: 8
+#  cloud:
+    inetutils:
+#      #子系统注册到Nacos上的IP地址
+      preferred-networks: 127.0.0.1
+#    nacos:
+#      #配置子系统在Web管理页面上的注册信息
+#      config:
+#        group: DEFAULT_GROUP
+#        file-extension: yaml
+#        server-addr: 127.0.0.1:8848
+#        prefix: ${spring.application.name}
+#        namespace: zxds
+#      #配置子系统在Nacos上的注册信息
+#      discovery:
+#        namespace: zxds
+#        username: nacos
+#        password: nacos
+#        server-addr: 127.0.0.1:8848
+#        heart-beat-interval: 1000
+#        heart-beat-timeout: 1000
+#        group: DEFAULT_GROUP
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 20MB
+
+sa-token:
+  # HTTP请求头中token的名称
+  token-name: token
+  # token有效期，单位s 默认30天, -1代表永不过期
+  timeout: 2592000
+  # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+  activity-timeout: -1
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  allow-concurrent-login: true
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: false
+  # token风格
+  token-style: uuid
+  #读取Cookie中Token
+  isReadCookie: false
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /doc-api.html
+  swagger-ui:
+    path: /swagger-ui.html
+    disable-swagger-default-url: on
+
+# seata 实现分布式事务
+seata:
+  enabled: true  # 启用Seata
+  application-id: ${spring.application.name}  # 应用ID
+  tx-service-group: bff_customer_tx_group  # BFF专属事务组名
+  service:
+    vgroup-mapping:
+      # 关键：映射到Seata Server的集群名，必须与子系统和Seata Server配置一致
+      bff_customer_tx_group: default
+    grouplist:
+      default: 192.168.91.129:8091
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 10000
+        readTimeout: 300000
